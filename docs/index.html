@@ -1,0 +1,212 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Aurelia — PHP e-commerce demo walkthrough</title>
+<style>
+  :root {
+    --ink:#1d1b18; --soft:#56514a; --faint:#8b8378; --paper:#fbf9f6;
+    --line:#e6e0d8; --accent:#a84f2e; --surface:#fff;
+  }
+  *,*::before,*::after{box-sizing:border-box}
+  body{margin:0;background:var(--paper);color:var(--ink);
+       font:16px/1.6 ui-sans-serif,-apple-system,"Segoe UI",Roboto,Arial,sans-serif}
+  img{max-width:100%;display:block}
+  .wrap{width:min(940px,calc(100% - 2.5rem));margin-inline:auto}
+  header{border-bottom:1px solid var(--line);background:#fff;padding:2.6rem 0 2.2rem}
+  h1{font-family:"Iowan Old Style",Palatino,Georgia,serif;font-size:clamp(1.8rem,4vw,2.6rem);
+     line-height:1.15;margin:0 0 .5rem;letter-spacing:-.01em}
+  h2{font-family:"Iowan Old Style",Palatino,Georgia,serif;font-size:1.3rem;margin:0 0 .3rem}
+  .lead{color:var(--soft);max-width:62ch;margin:0}
+  .eyebrow{font-size:.75rem;letter-spacing:.16em;text-transform:uppercase;color:var(--accent);
+           margin:0 0 .8rem}
+  .note{background:#f6ece5;border-radius:10px;padding:.9rem 1.1rem;margin-top:1.6rem;
+        font-size:.93rem;color:var(--soft)}
+  .note strong{color:var(--ink)}
+  figure{margin:0 0 2.6rem}
+  figcaption{color:var(--soft);font-size:.93rem;margin-top:.6rem}
+  .shot{border:1px solid var(--line);border-radius:12px;overflow:hidden;background:#fff;
+        box-shadow:0 12px 28px -20px rgba(29,27,24,.5)}
+  .shot.phone{max-width:330px}
+  section{padding:2.8rem 0 .4rem}
+  .kicker{font-size:.74rem;letter-spacing:.14em;text-transform:uppercase;color:var(--faint);
+          margin:0 0 1.4rem;padding-bottom:.5rem;border-bottom:1px solid var(--line)}
+  a{color:var(--accent)}
+  footer{border-top:1px solid var(--line);margin-top:2rem;padding:2rem 0 3rem;
+         color:var(--faint);font-size:.9rem;background:#f6f2ec}
+  .pair{display:grid;grid-template-columns:1fr 1fr;gap:1.4rem}
+  @media (max-width:760px){.pair{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+    <p class="eyebrow">PHP e-commerce build · demo walkthrough</p>
+    <h1>A working store, built to your brief.</h1>
+    <p class="lead">Every screen below is the real application running — PHP 8 with a custom MVC,
+       PDO/MySQL, and no paid components. Nothing here is a mockup or a template.</p>
+    <div class="note">
+      <strong>The brand is a placeholder.</strong> The name “Aurelia”, the colours and the product
+      images are stand-ins so the demo has something to show. They get replaced with yours —
+      whenever you're ready, and there's no rush on that.
+    </div>
+  </div>
+</header>
+
+<div class="wrap">
+
+<section>
+  <p class="kicker">Storefront</p>
+
+  <figure>
+    <div class="shot"><img src="shots/01-home.jpg" alt="Homepage"></div>
+    <figcaption><strong>1. Homepage</strong> — featured products, category tiles and delivery
+      promises. Which products appear here is a checkbox in the admin panel.</figcaption>
+  </figure>
+
+  <figure>
+    <div class="shot"><img src="shots/02-catalogue.jpg" alt="Catalogue with filters"></div>
+    <figcaption><strong>2. Catalogue</strong> — browse by category, filter by maximum price or
+      in-stock only, sort four ways, paginated. Sale items and low stock are flagged
+      automatically.</figcaption>
+  </figure>
+
+  <figure>
+    <div class="shot"><img src="shots/03-search-typeahead.jpg" alt="Search suggestions"></div>
+    <figcaption><strong>3. Search</strong> — results drop down as you type, with thumbnail and
+      price, before you press enter.</figcaption>
+  </figure>
+
+  <figure>
+    <div class="shot"><img src="shots/04-product.jpg" alt="Product page"></div>
+    <figcaption><strong>4. Product page</strong> — sale pricing, live stock messaging, quantity
+      stepper, SKU and delivery terms.</figcaption>
+  </figure>
+
+  <figure>
+    <div class="shot"><img src="shots/05-cart.jpg" alt="Basket"></div>
+    <figcaption><strong>5. Basket</strong> — edit quantities, remove lines, free-delivery
+      threshold shown live. Prices are re-read from the database on every request, so a
+      tampered browser session can never change what someone is charged.</figcaption>
+  </figure>
+</section>
+
+<section>
+  <p class="kicker">Checkout and payment</p>
+
+  <figure>
+    <div class="shot"><img src="shots/07-checkout.jpg" alt="Checkout"></div>
+    <figcaption><strong>6. Checkout</strong> — guest or signed in, with validation on every
+      field and the order summary alongside.</figcaption>
+  </figure>
+
+  <figure>
+    <div class="shot"><img src="shots/08-payment-sandbox.jpg" alt="Payment sandbox"></div>
+    <figcaption><strong>7. Payment</strong> — Stripe Checkout is already wired up, including the
+      signature-verified webhook. Until live keys exist it runs on this sandbox page so the whole
+      order flow works end to end. Switching to real Stripe is one line of config; nothing else
+      in the code changes. PayPal or a local provider would be one extra class.</figcaption>
+  </figure>
+
+  <figure>
+    <div class="shot"><img src="shots/09-order-confirmed.jpg" alt="Order confirmation"></div>
+    <figcaption><strong>8. Confirmation</strong> — order reference, itemised total, delivery
+      address, and a confirmation email sent to the customer.</figcaption>
+  </figure>
+</section>
+
+<section>
+  <p class="kicker">Customer accounts</p>
+
+  <figure>
+    <div class="shot"><img src="shots/10-order-history.jpg" alt="Order history"></div>
+    <figcaption><strong>9. Order history</strong> — every past order with its status. A customer
+      can only ever read their own orders.</figcaption>
+  </figure>
+
+  <figure>
+    <div class="shot"><img src="shots/21-password-reset.jpg" alt="Password reset"></div>
+    <figcaption><strong>10. Password reset</strong> — emailed link, single use, expires after an
+      hour. The token is stored hashed, so a database leak doesn't hand anyone a working reset
+      link. Rate limited against guessing.</figcaption>
+  </figure>
+</section>
+
+<section>
+  <p class="kicker">Admin panel</p>
+
+  <figure>
+    <div class="shot"><img src="shots/11-admin-dashboard.jpg" alt="Admin dashboard"></div>
+    <figcaption><strong>11. Dashboard</strong> — revenue, order and customer counts, a 14-day
+      revenue chart, best sellers, and a running-low list with restock links.</figcaption>
+  </figure>
+
+  <figure>
+    <div class="shot"><img src="shots/12-admin-products.jpg" alt="Product list"></div>
+    <figcaption><strong>12. Inventory</strong> — every product with stock level, live/hidden
+      state and featured flag, searchable by name or SKU.</figcaption>
+  </figure>
+
+  <figure>
+    <div class="shot"><img src="shots/13-admin-product-form.jpg" alt="Add product form"></div>
+    <figcaption><strong>13. Adding a product</strong> — name, category, descriptions, price,
+      sale price, stock, image upload, and the two visibility toggles.</figcaption>
+  </figure>
+
+  <figure>
+    <div class="shot"><img src="shots/14-new-product-live.jpg" alt="New product on the storefront"></div>
+    <figcaption><strong>14. …and it is live immediately.</strong> This is your first acceptance
+      criterion: the product added in the previous screenshot, found by search on the public
+      storefront seconds later. No cache to clear, no rebuild.</figcaption>
+  </figure>
+
+  <figure>
+    <div class="shot"><img src="shots/15-admin-orders.jpg" alt="Order management"></div>
+    <figcaption><strong>15. Orders</strong> — filter by status, search by reference, name or
+      email.</figcaption>
+  </figure>
+
+  <figure>
+    <div class="shot"><img src="shots/16-admin-order-detail.jpg" alt="Order detail"></div>
+    <figcaption><strong>16. Order detail</strong> — items, customer, address, payment reference.
+      Changing the status to shipped, completed, cancelled or refunded emails the customer
+      automatically.</figcaption>
+  </figure>
+</section>
+
+<section>
+  <p class="kicker">On a phone</p>
+  <div class="pair">
+    <figure>
+      <div class="shot phone"><img src="shots/17-mobile-home.jpg" alt="Mobile homepage"></div>
+      <figcaption>Homepage at 390px wide.</figcaption>
+    </figure>
+    <figure>
+      <div class="shot phone"><img src="shots/19-mobile-product.jpg" alt="Mobile product page"></div>
+      <figcaption>Product page — same store, one codebase.</figcaption>
+    </figure>
+  </div>
+</section>
+
+<section>
+  <p class="kicker">How it was checked</p>
+  <p class="lead">The whole path — browse, search, add to basket, register, check out, pay,
+     receive the confirmation, see it in order history, then sign in as admin, publish a product
+     and watch it appear on the storefront — was driven through a real browser automatically, at
+     both desktop and phone sizes, before any of it was sent to you. The password reset was
+     tested separately, token and all.</p>
+  <p class="lead" style="margin-top:1rem">Source code:
+     <a href="https://github.com/anirudhatalmale6-alt/aurelia-php-ecommerce">github.com/anirudhatalmale6-alt/aurelia-php-ecommerce</a>
+  </p>
+</section>
+
+</div>
+
+<footer>
+  <div class="wrap">Demo build · PHP 8 · MySQL / MariaDB · no paid dependencies</div>
+</footer>
+
+</body>
+</html>
